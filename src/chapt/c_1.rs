@@ -1,6 +1,6 @@
 use std::{
     fmt::Debug,
-    ops::{self, Deref},
+    ops::{Deref, Div, Sub},
     process::Output,
 };
 
@@ -190,4 +190,126 @@ pub fn make_2d_array_vec<T: Default + Clone>(row: usize, col: usize) -> Vec<Vec<
         martix.push(row);
     }
     martix
+}
+
+pub fn make_2d_array_with_array<T: Default + Copy>(row: usize, row_size: usize) -> Vec<Vec<T>> {
+    // let mut martix = [[T::default(); row_size]; col];
+    let mut martix: Vec<Vec<T>> = Vec::with_capacity(row);
+    for _ in 0..row {
+        let rows = vec![T::default(); row_size];
+        martix.push(rows);
+    }
+    martix
+}
+
+pub fn change_length_1d<T: Copy>(array: &[T], new_len: usize) -> Vec<T> {
+    let mut martix = Vec::with_capacity(new_len);
+    let min_length = array.len().min(new_len);
+    for i in 0..min_length {
+        martix.push(array[i]);
+    }
+    martix
+}
+
+pub fn test_change_length_1d() {
+    // static change_array = [1;5];
+    let change_array: [i32; 5] = [1; 5];
+    println!("{:?}", change_length_1d(&change_array, 2));
+}
+
+pub struct Currency {
+    amount: f64,
+    currency_code: String,
+}
+
+impl Currency {
+    fn new(amount: f64, currency_code: &String) -> Currency {
+        Currency {
+            amount,
+            currency_code: currency_code.to_string(),
+        }
+    }
+    fn print_info(&self) {
+        println!("Amount:{} {}", self.amount, self.currency_code);
+    }
+
+    fn convert_to(&mut self, new_currency: &str, exchange_rate: f64) {
+        if self.currency_code == new_currency {
+            println!("Currency code is already {}", new_currency);
+            return;
+        }
+        self.amount *= exchange_rate;
+        self.currency_code = new_currency.to_string();
+    }
+}
+
+pub struct CurrencyT<T> {
+    amount: T,
+    currency_code: String,
+}
+
+impl<T> CurrencyT<T>
+where
+    T: std::ops::Sub<Output = T> + Copy,
+{
+    fn new(amount: T, currency_code: &String) -> CurrencyT<T> {
+        CurrencyT {
+            amount,
+            currency_code: currency_code.to_string(),
+        }
+    }
+    fn subtract(&self, x: T) -> T {
+        self.amount - x
+    }
+}
+
+impl<T> Sub<T> for CurrencyT<T>
+where
+    T: std::ops::Sub<Output = T> + Copy,
+{
+    type Output = T;
+    fn sub(self, x: T) -> T {
+        self.amount - x
+    }
+}
+
+// impl<T> Div<T> for CurrencyT<T>
+// where
+//     T: Div<Output = T> + Copy,
+// {
+//     type Output = CurrencyT<T>;
+
+//     fn div(self, x: T) -> CurrencyT<T> {
+//         CurrencyT::new(self.amount / x, &self.currency_code)
+//     }
+// }
+
+// impl<T> Div<T> for CurrencyT<T>
+// where
+//     T: std::ops::Div<Output = CurrencyT<T>> + Copy,
+// {
+//     type Output = CurrencyT<T>;
+//     fn div(self, x: T) -> CurrencyT<T> {
+//         CurrencyT::new(self.amount / x, &self.currency_code)
+//     }
+// }
+
+pub trait Add {
+    fn add(&self) -> i32;
+}
+
+impl Add for i32 {
+    fn add(&self) -> i32 {
+        *self + 10
+    }
+}
+
+impl Add for f32 {
+    fn add(&self) -> i32 {
+        *self as i32 + 20
+    }
+}
+
+pub fn add_generic<T: Add>(value: &T) -> i32 {
+    value.add()
 }

@@ -1,5 +1,6 @@
 pub mod chapt;
 // use crate::chapt::c_1::abc;
+use std::io;
 
 fn main() {
     println!("{:?}", chapt::c_1::abc(1, 2, 3));
@@ -35,4 +36,27 @@ fn main() {
 
     let martix_2d_arr: [[i32; 4]; 3] = chapt::c_1::make_2d_array(2, 3);
     println!("{:?}", martix_2d_arr);
+    // chapt::c_1::change_length_1d(array, new_len)
+    chapt::c_1::test_change_length_1d();
+
+    let mut buf = String::new();
+    match io::stdin().read_line(&mut buf) {
+        Ok(_) => {
+            println!("{:?}", buf);
+        }
+        Err(err) => {
+            println!("get input error {:?}", err);
+        }
+    }
+
+    let factorial_num = 5;
+    println!(
+        "factorial result is: {:?} ",
+        chapt::c_1_7::factorial(factorial_num)
+    );
+    let sum_arr = [3, 2, 3, 2, 3, 2];
+    println!("sum of sum_arr is {:?}", chapt::c_1_7::sum(&sum_arr));
+
+    println!("fib result is {:?}", chapt::c_1_7::fib(4
+    ));
 }
